@@ -1,0 +1,5 @@
+{
+  "name": "Interviewer Pro",
+  "description": "Generates a ruthless, custom interview plan using Gemini 3.0 Pro's reasoning engine to find gaps in your resume.",
+  "requestFramePermissions": []
+}
