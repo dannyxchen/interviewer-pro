@@ -1,3 +1,4 @@
+
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -46,10 +47,11 @@ Generate a **Comprehensive Interview Script** that covers every angle.
 ---
 
 # PHASE 2: INTERVIEW SIMULATION (CHAT LOOP)
-When the user answers:
+After generating the script, wait for the user to respond. The user might say "Let's start with Q1" or provide an answer.
 1.  **Keep it Simple:** Use short, clear sentences.
 2.  **Challenge Them:** If they say "We did this", ask "What specifically did YOU do?"
 3.  **No Jargon:** Do not use fancy words.
+4.  **Stay in Character:** You are the interviewer. Do not break character.
 `;
 
 marked.use({
@@ -83,80 +85,82 @@ function SetupView({
   handleGeneratePlan, isLoading, error
 }: SetupViewProps) {
   return (
-    <div className="setup-view">
-      <div className="setup-panel left">
-        <div className="brand-header-small">
-           <div className="icon-box">
-             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
-           </div>
-           <h2>Candidate Profile</h2>
-        </div>
-        
-        <div className="input-group">
-          <label htmlFor="language">Interview Language</label>
-          <div className="select-wrapper">
-            <select id="language" value={language} onChange={(e) => setLanguage(e.target.value)}>
-                <option value="中文">中文 (Chinese)</option>
-                <option value="English">English</option>
-                <option value="Spanish">Spanish</option>
-                <option value="French">French</option>
-                <option value="German">German</option>
-                <option value="Hindi">Hindi</option>
-                <option value="Japanese">Japanese</option>
-            </select>
-            <svg className="select-arrow" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+    <div className="setup-container fade-in">
+      <div className="setup-grid">
+        {/* Left Column: Resume */}
+        <div className="card glass-panel">
+          <div className="card-header">
+            <div className="icon-badge blue">
+               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+            </div>
+            <h3>Candidate Resume</h3>
+          </div>
+          
+          <div className="form-group">
+            <label>Language</label>
+            <div className="select-wrapper">
+                <select value={language} onChange={(e) => setLanguage(e.target.value)}>
+                    <option value="English">English</option>
+                    <option value="中文">中文 (Chinese)</option>
+                    <option value="Spanish">Spanish</option>
+                    <option value="French">French</option>
+                    <option value="German">German</option>
+                    <option value="Japanese">Japanese</option>
+                </select>
+                <div className="select-arrow">▼</div>
+            </div>
+          </div>
+
+          <div className="form-group grow">
+             <label>Paste Resume Text</label>
+             <textarea
+               value={resume}
+               onChange={(e) => setResume(e.target.value)}
+               placeholder="Paste the full resume here..."
+             />
           </div>
         </div>
 
-        <div className="input-group grow">
-          <label htmlFor="resume">Resume / CV</label>
-          <textarea
-            id="resume"
-            value={resume}
-            onChange={(e) => setResume(e.target.value)}
-            placeholder="Paste your full resume here. I'll look for metrics that don't add up."
-            aria-label="Resume Input"
-          />
+        {/* Right Column: JD */}
+        <div className="card glass-panel">
+           <div className="card-header">
+            <div className="icon-badge purple">
+               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+            </div>
+            <h3>Target Job Description</h3>
+          </div>
+          <div className="form-group grow">
+             <label>Paste Job Description</label>
+             <textarea
+               value={jobDescription}
+               onChange={(e) => setJobDescription(e.target.value)}
+               placeholder="Paste the job description here..."
+             />
+          </div>
         </div>
       </div>
 
-      <div className="setup-panel right">
-         <div className="brand-header-small">
-           <div className="icon-box target">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-           </div>
-           <h2>Target Role</h2>
-        </div>
-        <div className="input-group grow">
-          <label htmlFor="jd">Job Description (JD)</label>
-          <textarea
-            id="jd"
-            value={jobDescription}
-            onChange={(e) => setJobDescription(e.target.value)}
-            placeholder="Paste the Job Description. I'll identify the 'Deal Breaker' skills they really want."
-            aria-label="Job Description Input"
-          />
-        </div>
-
-        <div className="action-area">
-            {error && <div className="error-banner">{error}</div>}
-            <button
-            className="start-button"
-            onClick={handleGeneratePlan}
-            disabled={!resume || !jobDescription || !language || isLoading}
-            >
+      <div className="action-bar">
+         {error && <div className="error-toast">{error}</div>}
+         
+         <button 
+           className={`generate-btn ${isLoading ? 'loading' : ''}`}
+           onClick={handleGeneratePlan}
+           disabled={!resume || !jobDescription || isLoading}
+         >
             {isLoading ? (
-                <span className="button-content">
-                    <span className="spinner"></span> Analyzing & Scripting...
-                </span>
+                <>
+                   <div className="spinner"></div>
+                   <span>Analyzing & Thinking...</span>
+                </>
             ) : (
-                <span className="button-content">
-                    Generate Interview Script <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                </span>
+                <>
+                   <span>Generate Interview Script</span>
+                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </>
             )}
-            </button>
-            <p className="disclaimer">Interviewer Pro uses <strong>Gemini 3.0 Pro</strong> with extended thinking budget to script your interview.</p>
-        </div>
+         </button>
+         <p className="model-info">Powered by <strong>Gemini 3.0 Pro</strong> • High-Reasoning Mode</p>
       </div>
     </div>
   );
@@ -166,149 +170,128 @@ interface ChatViewProps {
   messages: Message[];
   onSendMessage: (text: string) => void;
   isLoading: boolean;
-  onRestart: () => void;
 }
 
-function ChatView({ messages, onSendMessage, isLoading, onRestart }: ChatViewProps) {
-  const messageListRef = useRef<HTMLDivElement>(null);
+function ChatView({ messages, onSendMessage, isLoading }: ChatViewProps) {
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (messageListRef.current) {
-      messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
+    if (scrollRef.current) {
+        // Smooth scroll to bottom when messages change
+        scrollRef.current.scrollTo({
+            top: scrollRef.current.scrollHeight,
+            behavior: 'smooth'
+        });
     }
-  }, [messages]);
+  }, [messages, isLoading]);
   
   return (
-    <div className="chat-view">
-      <div className="chat-header">
-        <div className="chat-title">
-            <span className="status-dot"></span>
-            <h3>Live Interview Script</h3>
-        </div>
-      </div>
-      <div className="message-list" ref={messageListRef}>
-        {messages.map((msg, index) => (
-          <MessageBubble
-            key={index}
-            message={msg}
-            isFirstModelMessage={msg.role === 'model' && index === 0}
-          />
-        ))}
-        {isLoading && messages[messages.length - 1]?.role === 'user' && (
-           <div className="message-row model">
-                <div className="avatar model">AI</div>
-                <div className="message-bubble model loading">
-                   <div className="typing-indicator">
-                        <span></span><span></span><span></span>
-                   </div>
-                   <span className="thinking-text">Interviewer is thinking...</span>
-                </div>
-           </div>
-        )}
-      </div>
-      <MessageForm onSend={onSendMessage} isLoading={isLoading} />
+    <div className="chat-interface fade-in">
+       <div className="chat-scroll-area" ref={scrollRef}>
+          {messages.map((msg, index) => (
+             <MessageBubble key={index} message={msg} />
+          ))}
+          {isLoading && <ThinkingBubble />}
+       </div>
+       
+       <MessageInput onSend={onSendMessage} isLoading={isLoading} />
     </div>
   );
 }
 
-interface MessageBubbleProps {
-  message: Message;
-  isFirstModelMessage: boolean;
-}
-
-function MessageBubble({ message, isFirstModelMessage }: MessageBubbleProps) {
-    const [copied, setCopied] = useState(false);
-
-    const handleCopy = () => {
-        navigator.clipboard.writeText(message.text).then(() => {
-            setCopied(true);
-            setTimeout(() => setCopied(false), 2000);
-        });
-    };
-
+function MessageBubble({ message }: { message: Message }) {
+    const isModel = message.role === 'model';
+    
+    // Render Markdown securely
     const createMarkup = (text: string) => {
         const rawMarkup = marked.parse(text);
         return { __html: rawMarkup as string };
     };
 
     return (
-        <div className={`message-row ${message.role}`}>
-            <div className={`avatar ${message.role}`}>
-                {message.role === 'model' ? 'AI' : 'ME'}
-            </div>
-            <div className={`message-bubble ${message.role}`}>
-                {message.text ? (
-                    <div className="markdown-content" dangerouslySetInnerHTML={createMarkup(message.text)} />
+        <div className={`message-row ${isModel ? 'model' : 'user'}`}>
+            <div className="avatar">
+                {isModel ? (
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2 2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"></path><path d="M12 16a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2z"></path><path d="M12 9a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2 2 2 0 0 1-2-2V11a2 2 0 0 1 2-2z"></path><circle cx="12" cy="12" r="10"></circle></svg>
                 ) : (
-                    <div className="loading-container">
-                        <div className="typing-indicator"><span></span><span></span><span></span></div>
-                    </div>
+                    <span>ME</span>
                 )}
-                {isFirstModelMessage && message.text && (
-                    <div className="bubble-actions">
-                        <button onClick={handleCopy} className="copy-link">
-                            {copied ? 'Copied' : 'Copy Script'}
-                        </button>
-                    </div>
-                )}
+            </div>
+            <div className="bubble-content glass-bubble">
+                <div className="markdown-body" dangerouslySetInnerHTML={createMarkup(message.text)} />
             </div>
         </div>
     );
 }
 
-interface MessageFormProps {
-  onSend: (text: string) => void;
-  isLoading: boolean;
+function ThinkingBubble() {
+    return (
+        <div className="message-row model">
+             <div className="avatar">
+                <div className="pulse-ring"></div>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle></svg>
+            </div>
+            <div className="bubble-content glass-bubble thinking">
+                <div className="dot-flashing"></div>
+                <span>Interviewer is thinking...</span>
+            </div>
+        </div>
+    )
 }
 
-function MessageForm({ onSend, isLoading }: MessageFormProps) {
-  const [input, setInput] = useState('');
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+function MessageInput({ onSend, isLoading }: { onSend: (text: string) => void, isLoading: boolean }) {
+    const [text, setText] = useState('');
+    const taRef = useRef<HTMLTextAreaElement>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (input.trim()) {
-      onSend(input);
-      setInput('');
+    const handleSubmit = (e?: React.FormEvent) => {
+        e?.preventDefault();
+        if (text.trim() && !isLoading) {
+            onSend(text);
+            setText('');
+            if (taRef.current) taRef.current.style.height = 'auto';
+        }
     }
-  };
 
-  useEffect(() => {
-    const ta = textareaRef.current;
-    if (ta) {
-      ta.style.height = 'auto';
-      ta.style.height = `${ta.scrollHeight}px`;
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handleSubmit();
+        }
     }
-  }, [input]);
+    
+    // Auto-grow textarea
+    useEffect(() => {
+        if (taRef.current) {
+             taRef.current.style.height = 'auto';
+             taRef.current.style.height = `${Math.min(taRef.current.scrollHeight, 150)}px`;
+        }
+    }, [text]);
 
-  return (
-    <div className="input-area">
-        <form className="message-form" onSubmit={handleSubmit} aria-busy={isLoading}>
-        <textarea
-            ref={textareaRef}
-            className="message-input"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                handleSubmit(e);
-            }
-            }}
-            placeholder={isLoading ? "Interviewer is listening..." : "Type candidate's response here..."}
-            disabled={isLoading}
-            aria-label="Your answer"
-            rows={1}
-        />
-        <button type="submit" className="send-button" disabled={isLoading || !input.trim()} aria-label="Send Answer">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
-        </button>
-        </form>
-    </div>
-  )
+    return (
+        <div className="input-deck glass-panel">
+            <div className="input-wrapper">
+                <textarea
+                    ref={taRef}
+                    value={text}
+                    onChange={e => setText(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    placeholder={isLoading ? "Please wait..." : "Type your answer or ask for clarification..."}
+                    disabled={isLoading}
+                    rows={1}
+                />
+                <button 
+                    className="send-btn" 
+                    onClick={() => handleSubmit()} 
+                    disabled={!text.trim() || isLoading}
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path></svg>
+                </button>
+            </div>
+        </div>
+    )
 }
 
-// --- Main App Component ---
+// --- Main App ---
 
 function App() {
   const [view, setView] = useState<'setup' | 'interview'>('setup');
@@ -320,10 +303,13 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Initialize Chat and Generate Script
   const handleGeneratePlan = async () => {
-    if (!resume || !jobDescription || !language) return;
+    if (!resume || !jobDescription) return;
     setIsLoading(true);
     setError(null);
+    
+    // Transition to interview view immediately for better UX
     setView('interview');
 
     try {
@@ -332,104 +318,113 @@ function App() {
         model: 'gemini-3-pro-preview',
         config: { 
             systemInstruction: SYSTEM_PROMPT,
-            // Max thinking budget for deep "Gap Analysis" and scripting
             thinkingConfig: { thinkingBudget: 32768 } 
         },
       });
       setChat(newChat);
 
-      const firstUserMessage = `Here is the candidate info. Generate the Script.\n\n# Language\n\n${language}\n\n# Resume\n\n${resume}\n\n# Job Description\n\n${jobDescription}`;
+      const prompt = `Generate the interview script now.\n\nLANGUAGE: ${language}\n\nRESUME:\n${resume}\n\nJOB DESCRIPTION:\n${jobDescription}`;
       
-      const stream = await newChat.sendMessageStream({ message: firstUserMessage });
+      const stream = await newChat.sendMessageStream({ message: prompt });
+      
+      // Initialize model message
       setMessages([{ role: 'model', text: '' }]);
       
-      let responseText = '';
+      let fullText = '';
       for await (const chunk of stream) {
         if (chunk.text) {
-             responseText += chunk.text;
-             setMessages([{ role: 'model', text: responseText }]);
+             fullText += chunk.text;
+             setMessages(prev => {
+                const newMsgs = [...prev];
+                // Update the last message (the model's response)
+                newMsgs[0] = { role: 'model', text: fullText };
+                return newMsgs;
+             });
         }
       }
     } catch (err) {
       console.error(err);
-      setError('Failed to generate the plan. Please check your API key and try again.');
-      setView('setup');
+      setError("Failed to generate script. API might be busy.");
+      setView('setup'); // Go back on error
     } finally {
       setIsLoading(false);
     }
   };
   
+  // Handle continuous conversation
   const handleSendMessage = async (text: string) => {
-    if (!chat || isLoading || !text.trim()) return;
-    setIsLoading(true);
-    setError(null);
+    if (!chat || !text.trim()) return;
     
+    setIsLoading(true);
+    // Optimistically add user message
     setMessages(prev => [...prev, { role: 'user', text }]);
-
+    
     try {
         const stream = await chat.sendMessageStream({ message: text });
+        
+        // Add placeholder for model response
         setMessages(prev => [...prev, { role: 'model', text: '' }]);
         
-        let responseText = '';
+        let fullText = '';
         for await (const chunk of stream) {
             if (chunk.text) {
-                responseText += chunk.text;
+                fullText += chunk.text;
                 setMessages(prev => {
-                    const newMsgs = [...prev];
-                    newMsgs[newMsgs.length - 1].text = responseText;
-                    return newMsgs;
+                    const clone = [...prev];
+                    const lastIdx = clone.length - 1;
+                    clone[lastIdx] = { ...clone[lastIdx], text: fullText };
+                    return clone;
                 });
             }
         }
-    } catch(err) {
-        console.error(err);
-        const errorText = 'Sorry, the connection was lost. Please restart.';
-        setMessages(prev => {
-            const newMsgs = [...prev];
-            newMsgs[newMsgs.length - 1].text = errorText;
-            return newMsgs;
-        });
+    } catch (err) {
+        console.error("Chat Error", err);
+        setMessages(prev => [...prev, { role: 'model', text: "**Error:** Connection lost. Please try again." }]);
     } finally {
         setIsLoading(false);
     }
   };
-  
+
   const handleRestart = () => {
-    if (window.confirm('Restart interview preparation?')) {
+    if (confirm("Are you sure you want to start a new session? Current progress will be lost.")) {
         setView('setup');
         setMessages([]);
         setChat(null);
         setError(null);
     }
-  }
+  };
 
   return (
-    <div className="app-container">
-      <header className="app-header">
-        <h1>
-            <div className="logo-icon">IP</div>
-            Interviewer Pro
-        </h1>
-        {view === 'interview' && <button className="restart-button" onClick={handleRestart}>New Session</button>}
+    <div className="app-root">
+      <header className="glass-header">
+        <div className="brand">
+            <div className="logo">IP</div>
+            <h1>Interviewer Pro <span className="version">3.0</span></h1>
+        </div>
+        <button className="restart-btn" onClick={handleRestart} aria-label="New Session">
+           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+           <span>New Session</span>
+        </button>
       </header>
-      
-      {view === 'setup' ? (
-        <SetupView 
-            resume={resume} setResume={setResume}
-            jobDescription={jobDescription} setJobDescription={setJobDescription}
-            language={language} setLanguage={setLanguage}
-            handleGeneratePlan={handleGeneratePlan}
-            isLoading={isLoading}
-            error={error}
-        />
-      ) : (
-        <ChatView
-            messages={messages}
-            onSendMessage={handleSendMessage}
-            isLoading={isLoading}
-            onRestart={handleRestart}
-        />
-      )}
+
+      <main className="main-content">
+        {view === 'setup' ? (
+             <SetupView 
+                resume={resume} setResume={setResume}
+                jobDescription={jobDescription} setJobDescription={setJobDescription}
+                language={language} setLanguage={setLanguage}
+                handleGeneratePlan={handleGeneratePlan}
+                isLoading={isLoading}
+                error={error}
+             />
+        ) : (
+             <ChatView 
+                messages={messages} 
+                onSendMessage={handleSendMessage}
+                isLoading={isLoading}
+             />
+        )}
+      </main>
     </div>
   );
 }
